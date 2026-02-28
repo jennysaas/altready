@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AltReady — Bulk Image Alt Text Manager for WordPress</title>
-    <meta name="description" content="Fix missing alt text across your entire WordPress media library in minutes. No account, no tracking, no subscription. Privacy-first accessibility compliance.">
-    <meta property="og:title" content="AltReady — Bulk Image Alt Text Manager for WordPress">
-    <meta property="og:description" content="Fix missing alt text across your entire WordPress media library in minutes. Privacy-first, no tracking.">
+    <title>AltReady — Fix Missing Alt Text Across Your Entire WordPress Site</title>
+    <meta name="description" content="Bulk audit, manage, and fix missing image alt text for WCAG, ADA, and EU Accessibility Act compliance. Flat pricing — no per-image fees. Built in Europe.">
+    <meta property="og:title" content="AltReady — Fix Missing Alt Text on WordPress">
+    <meta property="og:description" content="Your site has hundreds of images without alt text. Every one is a legal liability and SEO missed opportunity. Fix them all in minutes.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://jennysaas.github.io/altready">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,13 +14,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         :root {
             --primary: #4F46E5;
             --primary-dark: #4338CA;
             --primary-light: #EEF2FF;
+            --red: #DC2626;
+            --red-light: #FEF2F2;
             --green: #059669;
             --green-light: #D1FAE5;
+            --amber: #D97706;
+            --amber-light: #FFFBEB;
             --gray-50: #F9FAFB;
             --gray-100: #F3F4F6;
             --gray-200: #E5E7EB;
@@ -28,7 +31,6 @@
             --gray-700: #374151;
             --gray-900: #111827;
         }
-        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--gray-900);
@@ -45,532 +47,568 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        .logo {
-            font-weight: 800;
-            font-size: 1.5rem;
-            color: var(--primary);
-            text-decoration: none;
-        }
+        .logo { font-weight: 800; font-size: 1.5rem; color: var(--primary); text-decoration: none; }
         .logo span { color: var(--gray-900); }
+        .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+        .nav-link { color: var(--gray-700); text-decoration: none; font-weight: 500; font-size: 0.95rem; }
+        .nav-link:hover { color: var(--primary); }
         .nav-cta {
-            background: var(--primary);
-            color: #fff;
-            padding: 0.6rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
+            background: var(--primary); color: #fff; padding: 0.6rem 1.5rem;
+            border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.95rem;
             transition: background 0.2s;
         }
         .nav-cta:hover { background: var(--primary-dark); }
 
+        /* Urgency bar */
+        .urgency-bar {
+            background: var(--red-light);
+            border-bottom: 1px solid #FECACA;
+            padding: 0.65rem 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--red);
+            font-weight: 600;
+        }
+        .urgency-bar a { color: var(--red); }
+
         /* Hero */
         .hero {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem 3rem;
-            text-align: center;
+            max-width: 1200px; margin: 0 auto; padding: 4rem 2rem 2rem; text-align: center;
         }
-        .badge {
-            display: inline-block;
-            background: var(--green-light);
-            color: var(--green);
-            font-weight: 600;
-            font-size: 0.85rem;
-            padding: 0.35rem 1rem;
-            border-radius: 100px;
-            margin-bottom: 1.5rem;
+        .europe-badge {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF;
+            font-weight: 600; font-size: 0.85rem; padding: 0.35rem 1rem;
+            border-radius: 100px; margin-bottom: 1.5rem;
         }
         .hero h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 800;
-            line-height: 1.15;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
+            font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800;
+            line-height: 1.15; margin-bottom: 1.5rem; letter-spacing: -0.02em;
         }
         .hero h1 .highlight {
-            background: linear-gradient(135deg, var(--primary), #7C3AED);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            background: linear-gradient(135deg, var(--red), #B91C1C);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .hero p {
-            font-size: 1.25rem;
-            color: var(--gray-500);
-            max-width: 640px;
-            margin: 0 auto 2rem;
+            font-size: 1.2rem; color: var(--gray-500); max-width: 660px; margin: 0 auto 2rem;
         }
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
         .btn-primary {
-            background: var(--primary);
-            color: #fff;
-            padding: 0.85rem 2rem;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.1rem;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+            background: var(--primary); color: #fff; padding: 0.85rem 2rem;
+            border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 1.1rem;
+            transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem;
         }
-        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79,70,229,0.3); }
         .btn-secondary {
-            background: var(--gray-100);
-            color: var(--gray-700);
-            padding: 0.85rem 2rem;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
+            background: var(--gray-100); color: var(--gray-700); padding: 0.85rem 2rem;
+            border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 1.1rem;
             transition: all 0.2s;
         }
         .btn-secondary:hover { background: var(--gray-200); }
-        
-        .price-note {
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            color: var(--gray-500);
-        }
+        .price-note { margin-top: 1rem; font-size: 0.9rem; color: var(--gray-500); }
         .price-note strong { color: var(--gray-700); }
+
+        /* Stats bar */
+        .stats-bar {
+            max-width: 1000px; margin: 2.5rem auto 0; display: flex; justify-content: center;
+            gap: 3rem; flex-wrap: wrap; padding: 2rem;
+            background: var(--gray-50); border-radius: 16px; border: 1px solid var(--gray-200);
+        }
+        .stat { text-align: center; }
+        .stat .number { font-size: 2rem; font-weight: 800; color: var(--primary); }
+        .stat .label { font-size: 0.85rem; color: var(--gray-500); font-weight: 500; }
+        .stat.danger .number { color: var(--red); }
+        .stat.amber .number { color: var(--amber); }
 
         /* Trust bar */
         .trust-bar {
-            display: flex;
-            justify-content: center;
-            gap: 2.5rem;
-            padding: 2rem;
-            flex-wrap: wrap;
+            display: flex; justify-content: center; gap: 2rem; padding: 2rem; flex-wrap: wrap;
         }
         .trust-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--gray-500);
-            font-size: 0.95rem;
-            font-weight: 500;
+            display: flex; align-items: center; gap: 0.5rem;
+            color: var(--gray-500); font-size: 0.9rem; font-weight: 500;
         }
-        .trust-item svg { width: 20px; height: 20px; color: var(--green); }
+        .trust-item .check { color: var(--green); font-weight: 700; }
 
-        /* Features */
+        /* Problem section */
+        .problem {
+            background: var(--gray-900); color: #fff; padding: 4rem 2rem;
+        }
+        .problem-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+        .problem h2 { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+        .problem p { color: #9CA3AF; font-size: 1.1rem; margin-bottom: 1.5rem; line-height: 1.7; }
+        .problem-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem; margin-top: 2rem; text-align: left;
+        }
+        .problem-card {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; padding: 1.5rem;
+        }
+        .problem-card .icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        .problem-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .problem-card p { font-size: 0.9rem; color: #9CA3AF; margin: 0; }
+
+        /* Solution / Features */
         .features {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
+            max-width: 1200px; margin: 0 auto; padding: 4rem 2rem;
         }
-        .features h2 {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-        }
-        .features .subtitle {
-            text-align: center;
-            color: var(--gray-500);
-            font-size: 1.1rem;
-            margin-bottom: 3rem;
-        }
+        .features h2 { text-align: center; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .features .subtitle { text-align: center; color: var(--gray-500); font-size: 1.1rem; margin-bottom: 3rem; }
         .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;
         }
         .feature-card {
-            background: var(--gray-50);
-            border: 1px solid var(--gray-200);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: all 0.2s;
+            background: var(--gray-50); border: 1px solid var(--gray-200);
+            border-radius: 16px; padding: 2rem; transition: all 0.2s;
         }
-        .feature-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08); }
+        .feature-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(79,70,229,0.08); }
         .feature-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--primary-light);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
+            width: 48px; height: 48px; background: var(--primary-light); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-size: 1.5rem;
         }
-        .feature-card h3 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        .feature-card p {
-            color: var(--gray-500);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
+        .feature-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .feature-card p { color: var(--gray-500); font-size: 0.95rem; }
 
-        /* Privacy section */
+        /* Comparison */
+        .comparison {
+            max-width: 900px; margin: 0 auto; padding: 4rem 2rem;
+        }
+        .comparison h2 { text-align: center; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .comparison .subtitle { text-align: center; color: var(--gray-500); font-size: 1.1rem; margin-bottom: 2.5rem; }
+        .comparison-table {
+            width: 100%; border-collapse: collapse; font-size: 0.95rem;
+        }
+        .comparison-table th {
+            text-align: left; padding: 0.75rem 1rem; background: var(--gray-50);
+            border-bottom: 2px solid var(--gray-200); font-weight: 700;
+        }
+        .comparison-table td {
+            padding: 0.75rem 1rem; border-bottom: 1px solid var(--gray-100);
+        }
+        .comparison-table .alt-col { background: var(--primary-light); font-weight: 600; }
+        .comparison-table .yes { color: var(--green); font-weight: 700; }
+        .comparison-table .no { color: var(--red); }
+        .comparison-table .meh { color: var(--amber); }
+
+        /* Privacy */
         .privacy {
-            background: var(--gray-900);
-            color: #fff;
-            padding: 4rem 2rem;
-            text-align: center;
+            background: linear-gradient(135deg, #1E3A5F, #0F172A); color: #fff; padding: 4rem 2rem; text-align: center;
         }
-        .privacy-inner {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        .privacy h2 {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-        }
-        .privacy p {
-            color: #9CA3AF;
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-        }
-        .privacy-badges {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
+        .privacy-inner { max-width: 700px; margin: 0 auto; }
+        .privacy h2 { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+        .privacy p { color: #94A3B8; font-size: 1.1rem; margin-bottom: 2rem; }
+        .privacy-badges { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
         .privacy-badge {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 0.7rem 1.5rem;
-            border-radius: 100px;
-            font-weight: 600;
-            font-size: 0.95rem;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+            padding: 0.7rem 1.5rem; border-radius: 100px; font-weight: 600; font-size: 0.9rem;
         }
 
         /* Pricing */
         .pricing {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-            text-align: center;
+            max-width: 950px; margin: 0 auto; padding: 4rem 2rem; text-align: center;
         }
-        .pricing h2 {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-        }
-        .pricing .subtitle {
-            color: var(--gray-500);
-            font-size: 1.1rem;
-            margin-bottom: 3rem;
-        }
+        .pricing h2 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .pricing .subtitle { color: var(--gray-500); font-size: 1.1rem; margin-bottom: 3rem; }
         .pricing-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;
         }
         .pricing-card {
-            border: 2px solid var(--gray-200);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: left;
+            border: 2px solid var(--gray-200); border-radius: 16px; padding: 2rem; text-align: left;
         }
-        .pricing-card.featured {
-            border-color: var(--primary);
-            position: relative;
-        }
+        .pricing-card.featured { border-color: var(--primary); position: relative; }
         .pricing-card.featured::before {
-            content: "Best Value";
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary);
-            color: #fff;
-            padding: 0.2rem 1rem;
-            border-radius: 100px;
-            font-size: 0.8rem;
-            font-weight: 700;
+            content: "Most Popular"; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            background: var(--primary); color: #fff; padding: 0.2rem 1rem;
+            border-radius: 100px; font-size: 0.8rem; font-weight: 700;
         }
-        .pricing-card h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        .pricing-card .price {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 0.25rem;
-        }
-        .pricing-card .price span {
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--gray-500);
-        }
-        .pricing-card .period {
-            color: var(--gray-500);
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-        }
-        .pricing-card ul {
-            list-style: none;
-            margin-bottom: 1.5rem;
-        }
+        .pricing-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .pricing-card .price { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.25rem; }
+        .pricing-card .price span { font-size: 1rem; font-weight: 500; color: var(--gray-500); }
+        .pricing-card .period { color: var(--gray-500); font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .pricing-card .savings { color: var(--green); font-weight: 600; font-size: 0.85rem; }
+        .pricing-card ul { list-style: none; margin-bottom: 1.5rem; }
         .pricing-card ul li {
-            padding: 0.35rem 0;
-            font-size: 0.95rem;
-            color: var(--gray-700);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            padding: 0.35rem 0; font-size: 0.95rem; color: var(--gray-700);
+            display: flex; align-items: center; gap: 0.5rem;
         }
-        .pricing-card ul li::before {
-            content: "✓";
-            color: var(--green);
-            font-weight: 700;
-        }
+        .pricing-card ul li::before { content: "\2713"; color: var(--green); font-weight: 700; }
         .pricing-card .btn-primary {
-            display: block;
-            text-align: center;
-            width: 100%;
-            font-size: 1rem;
-            padding: 0.75rem;
+            display: block; text-align: center; width: 100%; font-size: 1rem; padding: 0.75rem;
         }
+        .pricing-note {
+            margin-top: 2rem; font-size: 0.9rem; color: var(--gray-500);
+            background: var(--green-light); padding: 1rem; border-radius: 10px;
+            display: inline-block;
+        }
+        .pricing-note strong { color: var(--green); }
 
-        /* Free version */
-        .free-section {
-            background: var(--primary-light);
-            padding: 3rem 2rem;
-            text-align: center;
+        /* Audience */
+        .audience {
+            background: var(--gray-50); padding: 4rem 2rem; border-top: 1px solid var(--gray-200);
         }
-        .free-section h2 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
+        .audience-inner { max-width: 1000px; margin: 0 auto; }
+        .audience h2 { text-align: center; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .audience .subtitle { text-align: center; color: var(--gray-500); font-size: 1.1rem; margin-bottom: 2.5rem; }
+        .audience-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;
         }
-        .free-section p {
-            color: var(--gray-500);
-            max-width: 600px;
-            margin: 0 auto 1.5rem;
+        .audience-card {
+            background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; padding: 2rem;
         }
+        .audience-card .emoji { font-size: 2rem; margin-bottom: 0.75rem; }
+        .audience-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .audience-card p { color: var(--gray-500); font-size: 0.95rem; }
+
+        /* FAQ */
+        .faq { max-width: 700px; margin: 0 auto; padding: 4rem 2rem; }
+        .faq h2 { text-align: center; font-size: 2rem; font-weight: 800; margin-bottom: 2rem; }
+        .faq-item { border-bottom: 1px solid var(--gray-200); padding: 1.25rem 0; }
+        .faq-item h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .faq-item p { color: var(--gray-500); font-size: 0.95rem; }
+
+        /* CTA */
+        .final-cta {
+            background: var(--primary); color: #fff; padding: 4rem 2rem; text-align: center;
+        }
+        .final-cta h2 { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+        .final-cta p { color: rgba(255,255,255,0.8); font-size: 1.1rem; margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .btn-white {
+            background: #fff; color: var(--primary); padding: 0.85rem 2.5rem;
+            border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 1.1rem;
+            transition: all 0.2s; display: inline-block;
+        }
+        .btn-white:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 
         /* Footer */
         footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--gray-500);
-            font-size: 0.85rem;
+            text-align: center; padding: 2rem; color: var(--gray-500); font-size: 0.85rem;
             border-top: 1px solid var(--gray-200);
         }
         footer a { color: var(--primary); text-decoration: none; }
 
-        /* FAQ */
-        .faq {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-        }
-        .faq h2 {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 2rem;
-        }
-        .faq-item {
-            border-bottom: 1px solid var(--gray-200);
-            padding: 1.25rem 0;
-        }
-        .faq-item h3 {
-            font-size: 1.05rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            cursor: pointer;
-        }
-        .faq-item p {
-            color: var(--gray-500);
-            font-size: 0.95rem;
-        }
-
         @media (max-width: 640px) {
             .hero { padding: 2rem 1.5rem; }
-            .features-grid { grid-template-columns: 1fr; }
-            .pricing-cards { grid-template-columns: 1fr; }
-            .trust-bar { gap: 1rem; }
+            .features-grid, .pricing-cards, .audience-grid { grid-template-columns: 1fr; }
+            .stats-bar { gap: 1.5rem; }
+            .comparison-table { font-size: 0.8rem; }
+            .comparison-table th, .comparison-table td { padding: 0.5rem; }
         }
     </style>
 </head>
 <body>
+    <div class="urgency-bar">
+        &#9888;&#65039; The EU Accessibility Act is now in effect. Missing alt text is the #1 cited WCAG failure in lawsuits.
+    </div>
+
     <nav>
         <a href="#" class="logo">Alt<span>Ready</span></a>
-        <a href="https://checkout.freemius.com/product/25076/plan/41573/" class="nav-cta">Get Pro</a>
+        <div class="nav-right">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#pricing" class="nav-link">Pricing</a>
+            <a href="#faq" class="nav-link">FAQ</a>
+            <a href="https://checkout.freemius.com/product/25076/plan/41573/" class="nav-cta">Start Free Trial</a>
+        </div>
     </nav>
 
     <section class="hero">
-        <div class="badge">🔒 Privacy-First WordPress Plugin</div>
-        <h1>Fix missing alt text<br>across your <span class="highlight">entire site</span></h1>
-        <p>Scan your WordPress media library, find images without alt text, and fix them in bulk. Better accessibility, better SEO, zero hassle.</p>
+        <div class="europe-badge">&#127466;&#127482; Built in Europe &middot; GDPR Compliant</div>
+        <h1>Your site has hundreds of images<br>with <span class="highlight">missing alt text</span></h1>
+        <p>Every missing alt tag is an accessibility barrier, a legal liability, and a missed SEO opportunity. AltReady finds them all and lets you fix them in bulk.</p>
         <div class="hero-buttons">
-            <a href="https://checkout.freemius.com/product/25076/plan/41573/" class="btn-primary">
-                Start Free Trial →
-            </a>
-            <a href="#features" class="btn-secondary">See Features</a>
+            <a href="https://checkout.freemius.com/product/25076/plan/41573/" class="btn-primary">Find Your Missing Alt Text &rarr;</a>
+            <a href="#pricing" class="btn-secondary">See Pricing</a>
         </div>
-        <p class="price-note">3-day free trial · No credit card required · <strong>From $4.99/mo</strong></p>
+        <p class="price-note">3-day free trial &middot; No credit card required &middot; <strong>Flat pricing &mdash; never pay per image</strong></p>
     </section>
 
-    <div class="trust-bar">
-        <div class="trust-item">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            No account required
+    <div class="stats-bar">
+        <div class="stat danger">
+            <div class="number">50%</div>
+            <div class="label">of websites have missing alt text</div>
         </div>
-        <div class="trust-item">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            No tracking or data collection
+        <div class="stat amber">
+            <div class="number">#1</div>
+            <div class="label">accessibility failure cited in lawsuits</div>
         </div>
-        <div class="trust-item">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            Works offline
-        </div>
-        <div class="trust-item">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            WCAG & ADA compliance
-        </div>
-        <div class="trust-item">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            🇪🇺 Built in Europe
+        <div class="stat">
+            <div class="number">70%</div>
+            <div class="label">more image search clicks with alt text</div>
         </div>
     </div>
 
+    <div class="trust-bar">
+        <div class="trust-item"><span class="check">&#10003;</span> No account required</div>
+        <div class="trust-item"><span class="check">&#10003;</span> No tracking or data collection</div>
+        <div class="trust-item"><span class="check">&#10003;</span> 100% local &mdash; no cloud</div>
+        <div class="trust-item"><span class="check">&#10003;</span> WCAG 2.1 AA &amp; ADA compliant</div>
+        <div class="trust-item"><span class="check">&#10003;</span> EU Accessibility Act ready</div>
+    </div>
+
+    <!-- Problem section -->
+    <section class="problem">
+        <div class="problem-inner">
+            <h2>Alt text isn't optional anymore</h2>
+            <p>The EU Accessibility Act took effect in June 2025. ADA lawsuits are surging &mdash; and plaintiffs are now using AI to file them faster. Missing alt text is the #1 thing auditors flag. The question isn't if you'll need to fix it &mdash; it's when.</p>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <div class="icon">&#9878;&#65039;</div>
+                    <h3>Legal risk</h3>
+                    <p>ADA Title III lawsuits cite missing alt text more than any other WCAG failure. The EU EAA now applies to all commercial sites.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">&#128184;</div>
+                    <h3>Per-image pricing adds up</h3>
+                    <p>AI alt text tools charge 2-4&cent; per image. Got 5,000 product images? That's $100-200 every time you run it.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">&#128564;</div>
+                    <h3>Manual editing is painful</h3>
+                    <p>"The most boring part of running an online store" &mdash; editing alt text one image at a time in the media library.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
     <section class="features" id="features">
-        <h2>Everything you need for image accessibility</h2>
-        <p class="subtitle">Stop manually editing alt text one image at a time.</p>
+        <h2>Audit, manage, and fix &mdash; all in one dashboard</h2>
+        <p class="subtitle">Stop clicking through individual media items. Handle everything from one screen.</p>
         <div class="features-grid">
             <div class="feature-card">
-                <div class="feature-icon">🔍</div>
-                <h3>Full Media Library Scan</h3>
-                <p>Instantly identifies every image missing alt text across your entire WordPress site. Posts, pages, custom post types — nothing gets missed.</p>
+                <div class="feature-icon">&#128269;</div>
+                <h3>Full Site Audit</h3>
+                <p>Scans every image across posts, pages, WooCommerce products, and custom post types. Know exactly what's missing in seconds.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>Bulk Edit Alt Text</h3>
-                <p>Edit alt text for dozens of images at once from a single screen. No more clicking into individual media items one by one.</p>
+                <div class="feature-icon">&#9889;</div>
+                <h3>Bulk Edit</h3>
+                <p>Fix dozens of missing alt tags from a single screen. Select, edit, save. No more clicking into individual media items one by one.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>Accessibility Dashboard</h3>
-                <p>See your alt text coverage at a glance. Track your progress as you improve your site's accessibility score over time.</p>
+                <div class="feature-icon">&#128202;</div>
+                <h3>Compliance Dashboard</h3>
+                <p>See your alt text coverage at a glance. Track progress over time. Know exactly where you stand for WCAG/ADA/EAA compliance.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">🎯</div>
-                <h3>Smart Filtering</h3>
-                <p>Filter by post type, date range, or attachment status. Focus on the images that matter most for your compliance needs.</p>
+                <div class="feature-icon">&#127919;</div>
+                <h3>Smart Filters</h3>
+                <p>Filter by post type, date, attachment status, or missing/present alt text. Focus on what matters most for your audit.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">📋</div>
+                <div class="feature-icon">&#128203;</div>
                 <h3>Export Reports</h3>
-                <p>Generate CSV reports of your alt text status. Perfect for accessibility audits and compliance documentation.</p>
+                <p>Generate CSV reports for accessibility audits and compliance documentation. Perfect for agencies reporting to clients.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">🔐</div>
+                <div class="feature-icon">&#128274;</div>
                 <h3>100% Private</h3>
-                <p>Everything runs locally on your WordPress install. No external API calls, no data leaves your server. Ever.</p>
+                <p>Everything runs on your WordPress server. No images sent to external APIs. No cloud processing. Your content never leaves your site.</p>
             </div>
         </div>
     </section>
 
+    <!-- Comparison -->
+    <section class="comparison">
+        <h2>How AltReady compares</h2>
+        <p class="subtitle">The right tool depends on what you need. Here's an honest comparison.</p>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="alt-col">AltReady</th>
+                    <th>AI Alt Text Tools</th>
+                    <th>Accessibility Overlays</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Pricing</strong></td>
+                    <td class="alt-col">From $4.99/mo flat</td>
+                    <td>2-4&cent; per image</td>
+                    <td>$490-3,990/yr</td>
+                </tr>
+                <tr>
+                    <td><strong>Unlimited images</strong></td>
+                    <td class="alt-col yes">&#10003; Always</td>
+                    <td class="no">&#10007; Credit-based</td>
+                    <td class="yes">&#10003;</td>
+                </tr>
+                <tr>
+                    <td><strong>Data stays on your server</strong></td>
+                    <td class="alt-col yes">&#10003; 100% local</td>
+                    <td class="no">&#10007; Cloud processing</td>
+                    <td class="no">&#10007; External scripts</td>
+                </tr>
+                <tr>
+                    <td><strong>Bulk management</strong></td>
+                    <td class="alt-col yes">&#10003; Built for it</td>
+                    <td class="meh">~ Limited</td>
+                    <td class="no">&#10007; No</td>
+                </tr>
+                <tr>
+                    <td><strong>No account required</strong></td>
+                    <td class="alt-col yes">&#10003;</td>
+                    <td class="no">&#10007; API key needed</td>
+                    <td class="no">&#10007; Account needed</td>
+                </tr>
+                <tr>
+                    <td><strong>GDPR compliant</strong></td>
+                    <td class="alt-col yes">&#10003; No data leaves site</td>
+                    <td class="meh">~ Images sent to cloud</td>
+                    <td class="meh">~ Third-party scripts</td>
+                </tr>
+                <tr>
+                    <td><strong>WordPress-native</strong></td>
+                    <td class="alt-col yes">&#10003;</td>
+                    <td class="yes">&#10003; Most have plugins</td>
+                    <td class="no">&#10007; JavaScript overlay</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Who it's for -->
+    <section class="audience">
+        <div class="audience-inner">
+            <h2>Built for people who manage WordPress sites</h2>
+            <p class="subtitle">Whether it's your own site or dozens of client sites.</p>
+            <div class="audience-grid">
+                <div class="audience-card">
+                    <div class="emoji">&#127963;&#65039;</div>
+                    <h3>WordPress Agencies</h3>
+                    <p>Manage 20+ client sites? Fix alt text across all of them fast. Export compliance reports your clients will love.</p>
+                </div>
+                <div class="audience-card">
+                    <div class="emoji">&#128722;</div>
+                    <h3>WooCommerce Store Owners</h3>
+                    <p>Hundreds of product images without alt text? Stop paying per-image for AI tools. Manage your entire catalog from one screen.</p>
+                </div>
+                <div class="audience-card">
+                    <div class="emoji">&#128188;</div>
+                    <h3>Small Business Owners</h3>
+                    <p>A customer complained about accessibility? A lawyer sent a demand letter? Get compliant quickly without hiring a developer.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Privacy -->
     <section class="privacy">
         <div class="privacy-inner">
-            <h2>Your data stays yours. Period.</h2>
-            <p>AltReady runs entirely on your WordPress server. No cloud, no external APIs, no analytics. We don't know who you are, and we like it that way.</p>
+            <h2>&#127466;&#127482; Built in Europe. Your data stays yours.</h2>
+            <p>AltReady runs entirely on your WordPress server. No cloud, no external APIs, no analytics, no tracking. We don't know who you are, and we like it that way. Fully GDPR compliant by design &mdash; not by policy.</p>
             <div class="privacy-badges">
-                <span class="privacy-badge">🔒 No Account Needed</span>
-                <span class="privacy-badge">📡 No External Calls</span>
-                <span class="privacy-badge">🚫 Zero Tracking</span>
-                <span class="privacy-badge">💾 100% Local</span>
+                <span class="privacy-badge">&#128274; No Account Needed</span>
+                <span class="privacy-badge">&#128225; No External Calls</span>
+                <span class="privacy-badge">&#128683; Zero Tracking</span>
+                <span class="privacy-badge">&#128190; 100% Local Processing</span>
+                <span class="privacy-badge">&#127466;&#127482; GDPR by Design</span>
             </div>
         </div>
     </section>
 
+    <!-- Pricing -->
     <section class="pricing" id="pricing">
-        <h2>Simple, honest pricing</h2>
+        <h2>Simple pricing. No per-image fees. Ever.</h2>
         <p class="subtitle">Start with a 3-day free trial. No credit card required.</p>
         <div class="pricing-cards">
             <div class="pricing-card">
                 <h3>Monthly</h3>
                 <div class="price">$4.99 <span>/mo</span></div>
-                <div class="period">Billed monthly</div>
+                <div class="period">Billed monthly &middot; Cancel anytime</div>
                 <ul>
-                    <li>Full media library scan</li>
+                    <li>Unlimited images</li>
+                    <li>Full site audit</li>
                     <li>Bulk alt text editing</li>
-                    <li>Accessibility dashboard</li>
-                    <li>Export reports</li>
+                    <li>Compliance dashboard</li>
+                    <li>Export reports (CSV)</li>
                     <li>Priority support</li>
                 </ul>
-                <a href="https://checkout.freemius.com/product/25076/plan/41573/?billing_cycle=monthly" class="btn-primary">Start Free Trial</a>
+                <a href="https://checkout.freemius.com/product/25076/plan/41573/?billing_cycle=monthly" class="btn-primary">Start 3-Day Trial</a>
             </div>
             <div class="pricing-card featured">
                 <h3>Annual</h3>
                 <div class="price">$49.99 <span>/yr</span></div>
-                <div class="period">Save 17% — billed annually</div>
+                <div class="period">Billed annually</div>
+                <div class="savings">Save 17% vs monthly</div>
                 <ul>
                     <li>Everything in Monthly</li>
-                    <li>Bulk alt text editing</li>
-                    <li>Accessibility dashboard</li>
-                    <li>Export reports</li>
+                    <li>Unlimited images</li>
+                    <li>All future updates</li>
+                    <li>Compliance dashboard</li>
+                    <li>Export reports (CSV)</li>
                     <li>Priority support</li>
                 </ul>
-                <a href="https://checkout.freemius.com/product/25076/plan/41573/?billing_cycle=annual" class="btn-primary">Start Free Trial</a>
+                <a href="https://checkout.freemius.com/product/25076/plan/41573/?billing_cycle=annual" class="btn-primary">Start 3-Day Trial</a>
             </div>
             <div class="pricing-card">
                 <h3>Lifetime</h3>
                 <div class="price">$149.99</div>
-                <div class="period">One-time payment, forever</div>
+                <div class="period">One-time payment &middot; Forever</div>
+                <div class="savings">Best long-term value</div>
                 <ul>
                     <li>Everything in Annual</li>
                     <li>Lifetime updates</li>
                     <li>Lifetime support</li>
                     <li>No recurring fees</li>
-                    <li>Best long-term value</li>
+                    <li>Unlimited images</li>
+                    <li>All future features</li>
                 </ul>
-                <a href="https://checkout.freemius.com/product/25076/plan/41573/?billing_cycle=lifetime" class="btn-primary">Buy Lifetime</a>
+                <a href="https://checkout.freemius.com/product/25076/plan/41573/?billing_cycle=lifetime" class="btn-primary">Buy Lifetime Access</a>
             </div>
+        </div>
+        <div class="pricing-note">
+            <strong>&#10003; No per-image fees.</strong> Scan and edit unlimited images on every plan. Unlike AI alt text tools, your cost never goes up with your media library.
         </div>
     </section>
 
+    <!-- FAQ -->
     <section class="faq" id="faq">
         <h2>Frequently Asked Questions</h2>
         <div class="faq-item">
-            <h3>What is alt text and why does it matter?</h3>
-            <p>Alt text (alternative text) describes images for screen readers used by visually impaired visitors. It's required for WCAG/ADA compliance and helps with SEO — Google uses alt text to understand your images.</p>
+            <h3>Why does alt text matter for my business?</h3>
+            <p>Missing alt text is the #1 accessibility failure cited in ADA lawsuits. With the EU Accessibility Act now in effect, commercial websites must be accessible. Alt text also improves SEO &mdash; images with proper alt text get up to 70% more clicks in image search.</p>
         </div>
         <div class="faq-item">
-            <h3>Does AltReady work with page builders?</h3>
-            <p>Yes! AltReady scans your WordPress media library directly, so it works regardless of which page builder or theme you use — Elementor, Divi, Gutenberg, Classic Editor, and more.</p>
+            <h3>How is AltReady different from AI alt text generators?</h3>
+            <p>AI tools like AltText.ai charge per image (2-4&cent; each) and send your images to external servers. AltReady is a management tool &mdash; it helps you find, audit, and bulk-edit alt text without per-image costs and without sending data off your server. Different tools for different needs.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Does it work with WooCommerce?</h3>
+            <p>Yes. AltReady scans all WordPress content including WooCommerce product images, gallery images, and variation images. Perfect for stores with large product catalogs.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Does it work with page builders?</h3>
+            <p>Yes. AltReady scans your WordPress media library directly, so it works regardless of your page builder &mdash; Elementor, Divi, Gutenberg, WPBakery, Classic Editor, and more.</p>
         </div>
         <div class="faq-item">
             <h3>Will it slow down my site?</h3>
-            <p>No. AltReady only runs in your WordPress admin dashboard when you use it. It adds zero overhead to your frontend — your visitors won't notice any difference.</p>
+            <p>No. AltReady runs only in your WordPress admin when you use it. It adds zero overhead to your frontend &mdash; your visitors won't notice any difference.</p>
         </div>
         <div class="faq-item">
             <h3>Is my data safe?</h3>
-            <p>Absolutely. AltReady runs 100% locally on your WordPress server. No data is sent anywhere — no cloud processing, no external APIs, no tracking. Your content stays on your server.</p>
-        </div>
-        <div class="faq-item">
-            <h3>Can I try it before buying?</h3>
-            <p>Yes! Every plan comes with a 3-day free trial. No credit card required. Install it, try it, and only pay if you love it.</p>
+            <p>Absolutely. AltReady runs 100% locally on your WordPress server. No data is sent anywhere &mdash; no cloud processing, no external APIs, no tracking. Built in Europe, GDPR compliant by design.</p>
         </div>
         <div class="faq-item">
             <h3>What happens when my license expires?</h3>
-            <p>The plugin continues to work, but you won't receive updates or support. You can renew anytime to restore access to updates and priority support.</p>
+            <p>The plugin continues to work. You just won't receive updates or support until you renew. Your data and settings are never affected.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Can I use it on multiple sites?</h3>
+            <p>Each license covers one WordPress installation. Need multiple sites? Contact us for multi-site pricing.</p>
         </div>
     </section>
 
-    <section class="free-section">
-        <h2>Also available on WordPress.org</h2>
-        <p>A free version with core scanning features is pending review on the WordPress.org plugin directory. Coming soon!</p>
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <h2>Find your missing alt text today</h2>
+        <p>3-day free trial. No credit card. Takes 2 minutes to install. You'll know exactly where you stand.</p>
+        <a href="https://checkout.freemius.com/product/25076/plan/41573/" class="btn-white">Start Free Trial &rarr;</a>
     </section>
 
     <footer>
-        <p>© 2026 JennySaas · <a href="mailto:jennysaas34@gmail.com">Contact</a> · Built with ❤️ for a more accessible web</p>
+        <p>&copy; 2026 JennySaas &middot; <a href="mailto:jennysaas34@gmail.com">Contact</a> &middot; Built with &#10084;&#65039; in Europe for a more accessible web</p>
     </footer>
 </body>
 </html>
