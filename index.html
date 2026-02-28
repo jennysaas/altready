@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AltReady — Bulk Image Alt Text Manager for WordPress</title>
+    <meta name="description" content="Fix missing alt text across your entire WordPress media library in minutes. No account, no tracking, no subscription. Privacy-first accessibility compliance.">
+    <meta property="og:title" content="AltReady — Bulk Image Alt Text Manager for WordPress">
+    <meta property="og:description" content="Fix missing alt text across your entire WordPress media library in minutes. Privacy-first, no tracking.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jennysaas.github.io/altready">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #4338CA;
+            --primary-light: #EEF2FF;
+            --green: #059669;
+            --green-light: #D1FAE5;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-500: #6B7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--gray-900);
+            line-height: 1.6;
+            background: #fff;
+        }
+
+        /* Nav */
+        nav {
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .logo span { color: var(--gray-900); }
+        .nav-cta {
+            background: var(--primary);
+            color: #fff;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+        }
+        .nav-cta:hover { background: var(--primary-dark); }
+
+        /* Hero */
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+        }
+        .badge {
+            display: inline-block;
+            background: var(--green-light);
+            color: var(--green);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.35rem 1rem;
+            border-radius: 100px;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--primary), #7C3AED);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--gray-500);
+            max-width: 640px;
+            margin: 0 auto 2rem;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover { background: var(--gray-200); }
+        
+        .price-note {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--gray-500);
+        }
+        .price-note strong { color: var(--gray-700); }
+
+        /* Trust bar */
+        .trust-bar {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            padding: 2rem;
+            flex-wrap: wrap;
+        }
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-500);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .trust-item svg { width: 20px; height: 20px; color: var(--green); }
+
+        /* Features */
+        .features {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        .features h2 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        .features .subtitle {
+            text-align: center;
+            color: var(--gray-500);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .feature-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.2s;
+        }
+        .feature-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08); }
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .feature-card p {
+            color: var(--gray-500);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Privacy section */
+        .privacy {
+            background: var(--gray-900);
+            color: #fff;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        .privacy-inner {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .privacy h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        .privacy p {
+            color: #9CA3AF;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        .privacy-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .privacy-badge {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 0.7rem 1.5rem;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* Pricing */
+        .pricing {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        .pricing h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        .pricing .subtitle {
+            color: var(--gray-500);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .pricing-card {
+            border: 2px solid var(--gray-200);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: left;
+        }
+        .pricing-card.featured {
+            border-color: var(--primary);
+            position: relative;
+        }
+        .pricing-card.featured::before {
+            content: "Best Value";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: #fff;
+            padding: 0.2rem 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .pricing-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .pricing-card .price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+        .pricing-card .price span {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--gray-500);
+        }
+        .pricing-card .period {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        .pricing-card ul {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        .pricing-card ul li {
+            padding: 0.35rem 0;
+            font-size: 0.95rem;
+            color: var(--gray-700);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .pricing-card ul li::before {
+            content: "✓";
+            color: var(--green);
+            font-weight: 700;
+        }
+        .pricing-card .btn-primary {
+            display: block;
+            text-align: center;
+            width: 100%;
+            font-size: 1rem;
+            padding: 0.75rem;
+        }
+
+        /* Free version */
+        .free-section {
+            background: var(--primary-light);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .free-section h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        .free-section p {
+            color: var(--gray-500);
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-500);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        footer a { color: var(--primary); text-decoration: none; }
+
+        /* FAQ */
+        .faq {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        .faq h2 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1.25rem 0;
+        }
+        .faq-item h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+        .faq-item p {
+            color: var(--gray-500);
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 640px) {
+            .hero { padding: 2rem 1.5rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .pricing-cards { grid-template-columns: 1fr; }
+            .trust-bar { gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="logo">Alt<span>Ready</span></a>
+        <a href="https://checkout.freemius.com/product/25076/plan/41573/" class="nav-cta">Get Pro</a>
+    </nav>
+
+    <section class="hero">
+        <div class="badge">🔒 Privacy-First WordPress Plugin</div>
+        <h1>Fix missing alt text<br>across your <span class="highlight">entire site</span></h1>
+        <p>Scan your WordPress media library, find images without alt text, and fix them in bulk. Better accessibility, better SEO, zero hassle.</p>
+        <div class="hero-buttons">
+            <a href="https://checkout.freemius.com/product/25076/plan/41573/" class="btn-primary">
+                Start Free Trial →
+            </a>
+            <a href="#features" class="btn-secondary">See Features</a>
+        </div>
+        <p class="price-note">7-day free trial · No credit card required · <strong>From $4.99/mo</strong></p>
+    </section>
+
+    <div class="trust-bar">
+        <div class="trust-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            No account required
+        </div>
+        <div class="trust-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            No tracking or data collection
+        </div>
+        <div class="trust-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Works offline
+        </div>
+        <div class="trust-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            WCAG & ADA compliance
+        </div>
+    </div>
+
+    <section class="features" id="features">
+        <h2>Everything you need for image accessibility</h2>
+        <p class="subtitle">Stop manually editing alt text one image at a time.</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Full Media Library Scan</h3>
+                <p>Instantly identifies every image missing alt text across your entire WordPress site. Posts, pages, custom post types — nothing gets missed.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Bulk Edit Alt Text</h3>
+                <p>Edit alt text for dozens of images at once from a single screen. No more clicking into individual media items one by one.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Accessibility Dashboard</h3>
+                <p>See your alt text coverage at a glance. Track your progress as you improve your site's accessibility score over time.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Smart Filtering</h3>
+                <p>Filter by post type, date range, or attachment status. Focus on the images that matter most for your compliance needs.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3>Export Reports</h3>
+                <p>Generate CSV reports of your alt text status. Perfect for accessibility audits and compliance documentation.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h3>100% Private</h3>
+                <p>Everything runs locally on your WordPress install. No external API calls, no data leaves your server. Ever.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="privacy">
+        <div class="privacy-inner">
+            <h2>Your data stays yours. Period.</h2>
+            <p>AltReady runs entirely on your WordPress server. No cloud, no external APIs, no analytics. We don't know who you are, and we like it that way.</p>
+            <div class="privacy-badges">
+                <span class="privacy-badge">🔒 No Account Needed</span>
+                <span class="privacy-badge">📡 No External Calls</span>
+                <span class="privacy-badge">🚫 Zero Tracking</span>
+                <span class="privacy-badge">💾 100% Local</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <h2>Simple, honest pricing</h2>
+        <p class="subtitle">Start with a 7-day free trial. No credit card required.</p>
+        <div class="pricing-cards">
+            <div class="pricing-card">
+                <h3>Monthly</h3>
+                <div class="price">$4.99 <span>/mo</span></div>
+                <div class="period">Billed monthly</div>
+                <ul>
+                    <li>Full media library scan</li>
+                    <li>Bulk alt text editing</li>
+                    <li>Accessibility dashboard</li>
+                    <li>Export reports</li>
+                    <li>Priority support</li>
+                </ul>
+                <a href="https://checkout.freemius.com/product/25076/plan/41573/?billing_cycle=monthly" class="btn-primary">Start Free Trial</a>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Annual</h3>
+                <div class="price">$49.99 <span>/yr</span></div>
+                <div class="period">Save 17% — billed annually</div>
+                <ul>
+                    <li>Everything in Monthly</li>
+                    <li>Bulk alt text editing</li>
+                    <li>Accessibility dashboard</li>
+                    <li>Export reports</li>
+                    <li>Priority support</li>
+                </ul>
+                <a href="https://checkout.freemius.com/product/25076/plan/41573/?billing_cycle=annual" class="btn-primary">Start Free Trial</a>
+            </div>
+            <div class="pricing-card">
+                <h3>Lifetime</h3>
+                <div class="price">$149.99</div>
+                <div class="period">One-time payment, forever</div>
+                <ul>
+                    <li>Everything in Annual</li>
+                    <li>Lifetime updates</li>
+                    <li>Lifetime support</li>
+                    <li>No recurring fees</li>
+                    <li>Best long-term value</li>
+                </ul>
+                <a href="https://checkout.freemius.com/product/25076/plan/41573/?billing_cycle=lifetime" class="btn-primary">Buy Lifetime</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq" id="faq">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-item">
+            <h3>What is alt text and why does it matter?</h3>
+            <p>Alt text (alternative text) describes images for screen readers used by visually impaired visitors. It's required for WCAG/ADA compliance and helps with SEO — Google uses alt text to understand your images.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Does AltReady work with page builders?</h3>
+            <p>Yes! AltReady scans your WordPress media library directly, so it works regardless of which page builder or theme you use — Elementor, Divi, Gutenberg, Classic Editor, and more.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Will it slow down my site?</h3>
+            <p>No. AltReady only runs in your WordPress admin dashboard when you use it. It adds zero overhead to your frontend — your visitors won't notice any difference.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Is my data safe?</h3>
+            <p>Absolutely. AltReady runs 100% locally on your WordPress server. No data is sent anywhere — no cloud processing, no external APIs, no tracking. Your content stays on your server.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Can I try it before buying?</h3>
+            <p>Yes! Every plan comes with a 7-day free trial. No credit card required. Install it, try it, and only pay if you love it.</p>
+        </div>
+        <div class="faq-item">
+            <h3>What happens when my license expires?</h3>
+            <p>The plugin continues to work, but you won't receive updates or support. You can renew anytime to restore access to updates and priority support.</p>
+        </div>
+    </section>
+
+    <section class="free-section">
+        <h2>Also available on WordPress.org</h2>
+        <p>A free version with core scanning features is pending review on the WordPress.org plugin directory. Coming soon!</p>
+    </section>
+
+    <footer>
+        <p>© 2026 JennySaas · <a href="mailto:jennysaas34@gmail.com">Contact</a> · Built with ❤️ for a more accessible web</p>
+    </footer>
+</body>
+</html>
